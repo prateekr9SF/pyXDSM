@@ -1,0 +1,132 @@
+
+%%% Preamble Requirements %%%
+% \usepackage{geometry}
+% \usepackage{amsfonts}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage{tikz}
+
+
+% Optional packages such as sfmath set through python interface
+% \usepackage{sfmath}
+
+% \usetikzlibrary{arrows,chains,positioning,scopes,shapes.geometric,shapes.misc,shadows}
+
+%%% End Preamble Requirements %%%
+
+\input{"/opt/homebrew/Caskroom/miniforge/base/envs/mdao/lib/python3.9/site-packages/pyxdsm/diagram_styles"}
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+&
+\node [DataIO] (output_Optimizer) {$\xi^o$};&
+&
+&
+&
+&
+&
+\\
+%Row 1
+\node [DataIO] (left_output_Optimizer) {$\xi^*$};&
+\node [Optimization] (Optimizer) {$\text{IPOPT}$};&
+\node [DataInter] (Optimizer-SU2_DEF) {$\xi$};&
+&
+&
+&
+&
+\\
+%Row 2
+&
+&
+\node [FLUID] (SU2_DEF) {$\text{SU2}\_\text{DEF}$};&
+\node [DataInter] (SU2_DEF-SU2_CFD) {$\mathscr{X}$};&
+&
+&
+\node [DataInter] (SU2_DEF-SU2_GEO) {$\xi, \mathscr{X}$};&
+\\
+%Row 3
+&
+\node [DataInter] (SU2_CFD-Optimizer) {$f, g$};&
+&
+\node [FLUID] (SU2_CFD) {$\text{SU2}\_\text{CFD}$};&
+\node [DataInter] (SU2_CFD-SU2_CFD_AD) {$\mathscr{F}, \mathscr{X}$};&
+&
+&
+\\
+%Row 4
+&
+&
+&
+&
+\node [FLUID] (SU2_CFD_AD) {$\text{SU2}\_\text{CFD}\_\text{AD}$};&
+\node [DataInter] (SU2_CFD_AD-SU2_DOT_AD) {$\mathscr{A}, \mathscr{X}$};&
+&
+\\
+%Row 5
+&
+\node [DataInter] (SU2_DOT_AD-Optimizer) {$\nabla f, \nabla g$};&
+&
+&
+&
+\node [FLUID] (SU2_DOT_AD) {$\text{SU2}\_\text{DOT}\_\text{AD}$};&
+&
+\\
+%Row 6
+&
+\node [DataInter] (SU2_GEO-Optimizer) {$h, \nabla h$};&
+&
+&
+&
+&
+\node [FLUID] (SU2_GEO) {$\text{SU2}\_\text{GEO}$};&
+\\
+%Row 7
+&
+&
+&
+&
+&
+&
+&
+\\
+};
+
+% XDSM process chains
+{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (Optimizer);
+\chainin (SU2_DEF) [join=by ProcessHV];
+\chainin (SU2_CFD) [join=by ProcessHV];
+\chainin (SU2_CFD_AD) [join=by ProcessHV];
+\chainin (SU2_DOT_AD) [join=by ProcessHV];
+\chainin (SU2_GEO) [join=by ProcessHV];
+\chainin (Optimizer) [join=by ProcessHV];
+\end{pgfonlayer}
+}
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(Optimizer) edge [DataLine] (Optimizer-SU2_DEF)
+(SU2_DEF) edge [DataLine] (SU2_DEF-SU2_CFD)
+(SU2_CFD) edge [DataLine] (SU2_CFD-SU2_CFD_AD)
+(SU2_CFD_AD) edge [DataLine] (SU2_CFD_AD-SU2_DOT_AD)
+(SU2_DEF) edge [DataLine] (SU2_DEF-SU2_GEO)
+(SU2_CFD) edge [DataLine] (SU2_CFD-Optimizer)
+(SU2_DOT_AD) edge [DataLine] (SU2_DOT_AD-Optimizer)
+(SU2_GEO) edge [DataLine] (SU2_GEO-Optimizer)
+(Optimizer) edge [DataLine] (left_output_Optimizer)
+% Vertical edges
+(Optimizer-SU2_DEF) edge [DataLine] (SU2_DEF)
+(SU2_DEF-SU2_CFD) edge [DataLine] (SU2_CFD)
+(SU2_CFD-SU2_CFD_AD) edge [DataLine] (SU2_CFD_AD)
+(SU2_CFD_AD-SU2_DOT_AD) edge [DataLine] (SU2_DOT_AD)
+(SU2_DEF-SU2_GEO) edge [DataLine] (SU2_GEO)
+(SU2_CFD-Optimizer) edge [DataLine] (Optimizer)
+(SU2_DOT_AD-Optimizer) edge [DataLine] (Optimizer)
+(SU2_GEO-Optimizer) edge [DataLine] (Optimizer)
+(Optimizer) edge [DataLine] (output_Optimizer);
+\end{pgfonlayer}
+
+\end{tikzpicture}

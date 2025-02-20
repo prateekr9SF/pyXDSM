@@ -1,0 +1,69 @@
+
+%%% Preamble Requirements %%%
+% \usepackage{geometry}
+% \usepackage{amsfonts}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage{tikz}
+
+% Optional packages such as sfmath set through python interface
+% \usepackage{sfmath}
+
+% \usetikzlibrary{arrows,chains,positioning,scopes,shapes.geometric,shapes.misc,shadows}
+
+%%% End Preamble Requirements %%%
+
+\input{"/opt/homebrew/Caskroom/miniforge/base/envs/mdao/lib/python3.9/site-packages/pyxdsm/diagram_styles"}
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+\node [Optimization] (Optimizer) {$\text{Optimizer}$};&
+&
+&
+&
+\\
+%Row 1
+&
+\node [MDA] (MDA) {$\text{MDA}$};&
+\node [DataInter] (MDA-Fluid) {$\mathcal{G}$};&
+\node [DataInter] (MDA-Solid) {$\mathcal{G}$};&
+\\
+%Row 2
+&
+\node [DataInter] (Fluid-MDA) {$\mathcal{F}$};&
+\node [FLUID] (Fluid) {$\text{Aerodynamics}$};&
+&
+\\
+%Row 3
+&
+\node [DataInter] (Solid-MDA) {$\mathcal{S}$};&
+&
+\node [SOLID] (Solid) {$\text{Structure}$};&
+\\
+%Row 4
+&
+&
+&
+&
+\node [PROPULSION] (Prop) {$\text{Propulsion}$};\\
+};
+
+% XDSM process chains
+
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(Solid) edge [DataLine] (Solid-MDA)
+(Fluid) edge [DataLine] (Fluid-MDA)
+(MDA) edge [DataLine] (MDA-Fluid)
+(MDA) edge [DataLine] (MDA-Solid)
+% Vertical edges
+(Solid-MDA) edge [DataLine] (MDA)
+(Fluid-MDA) edge [DataLine] (MDA)
+(MDA-Fluid) edge [DataLine] (Fluid)
+(MDA-Solid) edge [DataLine] (Solid);
+\end{pgfonlayer}
+
+\end{tikzpicture}

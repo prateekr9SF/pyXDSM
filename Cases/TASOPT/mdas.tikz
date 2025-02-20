@@ -1,0 +1,438 @@
+
+%%% Preamble Requirements %%%
+% \usepackage{geometry}
+% \usepackage{amsfonts}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage{tikz}
+
+% Optional packages such as sfmath set through python interface
+% \usepackage{sfmath}
+
+% \usetikzlibrary{arrows,chains,positioning,scopes,shapes.geometric,shapes.misc,shadows}
+
+%%% End Preamble Requirements %%%
+
+\input{"/opt/homebrew/Caskroom/miniforge/base/lib/python3.10/site-packages/pyxdsm/diagram_styles"}
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+&
+\node [DataIO] (output_MDAS) {$x_a^o, x_s^o, x_p^o$};&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\\
+%Row 1
+\node [DataIO] (left_output_MDAS) {$MTOW^*$};&
+\node [Optimization] (MDAS) {$\text{MDAS}$};&
+\node [DataInter] (MDAS-Fuse) {$x_a^i,x_s^i$};&
+\node [DataInter] (MDAS-Wing) {$x_a^i, x_s^i$};&
+\node [DataInter] (MDAS-Tail) {$x_a^i, x_s^i$};&
+\node [DataInter] (MDAS-baln) {$x_p^i$};&
+&
+\node [DataInter] (MDAS-Eng) {$x_p^i$};&
+&
+\node [DataInter] (MDAS-Ini_Func) {$x_a^o, x_s^o, x_p^o$};&
+&
+&
+&
+&
+&
+\\
+%Row 2
+&
+&
+\node [FLUID] (Fuse) {$\text{Fuselage}$};&
+&
+&
+\node [DataInter] (Fuse-baln) {$x_a^i, x_s^i$};&
+&
+&
+&
+&
+\node [DataInter] (Fuse-size_Func) {$x_s^i$};&
+&
+\node [DataInter] (Fuse-aero_Func) {$x_a^i$};&
+&
+&
+\\
+%Row 3
+&
+&
+&
+\node [FLUID] (Wing) {$\text{Wing}$};&
+&
+\node [DataInter] (Wing-baln) {$x_a^i, x_s^i$};&
+&
+&
+&
+&
+\node [DataInter] (Wing-size_Func) {$x_s^i$};&
+&
+\node [DataInter] (Wing-aero_Func) {$x_a^i$};&
+&
+&
+\\
+%Row 4
+&
+&
+&
+&
+\node [FLUID] (Tail) {$\text{H/V Tail}$};&
+\node [DataInter] (Tail-baln) {$x_a^i, x_s^i$};&
+&
+&
+&
+&
+\node [DataInter] (Tail-size_Func) {$x_s^i$};&
+&
+\node [DataInter] (Tail-aero_Func) {$x_a^i$};&
+&
+&
+\\
+%Row 5
+&
+&
+&
+&
+&
+\node [MDA] (baln) {$\text{Balance}$};&
+\node [DataInter] (baln-drag) {$x_a^i, x_s^i, x_p^i$};&
+\node [DataInter] (baln-Eng) {$x_s^i$};&
+&
+&
+&
+&
+&
+&
+\node [DataInter] (baln-bal_Func) {$x_a^i, x_s^i, x_p^i$};&
+\\
+%Row 6
+&
+&
+&
+&
+&
+&
+\node [SOLID] (drag) {$\text{Drag}$};&
+\node [DataInter] (drag-Eng) {$x_a^i$};&
+\node [DataInter] (drag-Mission) {$x_a^i, x_s^i$};&
+&
+&
+&
+\node [DataInter] (drag-aero_Func) {$x_a^i, x_s^i, x_p^i$};&
+&
+&
+\\
+%Row 7
+&
+&
+&
+&
+&
+&
+&
+\node [FLUID] (Eng) {$\text{Engine}$};&
+\node [DataInter] (Eng-Mission) {$x_p^i$};&
+&
+&
+\node [DataInter] (Eng-eng_Func) {$x_p^i$};&
+&
+&
+&
+\\
+%Row 8
+&
+\node [DataInter] (Mission-MDAS) {$W_{MTO}, W_{Fuel}, x_a^i, x_s^i, x_p^i$};&
+&
+&
+&
+&
+&
+&
+\node [PROPULSION] (Mission) {$\text{Mission}$};&
+&
+&
+&
+&
+\node [DataInter] (Mission-mission_Func) {$x_a^i, x_s^i, x_p^i$};&
+&
+\\
+%Row 9
+&
+\node [DataInter] (Ini_Func-MDAS) {$x_a^t,x_s^t,x_p^t$};&
+&
+&
+&
+&
+&
+&
+&
+\node [FluidFunction,stack] (Ini_Func) {$\text{initialize()}$};&
+&
+&
+&
+&
+&
+\\
+%Row 10
+&
+&
+\node [DataInter] (size_Func-Fuse) {$y_s^i$};&
+\node [DataInter] (size_Func-Wing) {$y_s^i$};&
+&
+&
+&
+&
+&
+&
+\node [FluidFunction,stack] (size_Func) {$\text{structures()}$};&
+&
+&
+&
+&
+\\
+%Row 11
+&
+&
+&
+&
+&
+&
+&
+\node [DataInter] (eng_Func-Eng) {$y_p^i$};&
+&
+&
+&
+\node [FluidFunction,stack] (eng_Func) {$\text{engine()}$};&
+&
+&
+&
+\\
+%Row 12
+&
+&
+\node [DataInter] (aero_Func-Fuse) {$y_a^i$};&
+\node [DataInter] (aero_Func-Wing) {$y_a^i$};&
+&
+&
+\node [DataInter] (aero_Func-drag) {$y_a^i, y_s^i, y_p^i$};&
+&
+&
+&
+&
+&
+\node [FluidFunction,stack] (aero_Func) {$\text{aero()}$};&
+&
+&
+\\
+%Row 13
+&
+&
+&
+&
+&
+&
+&
+&
+\node [DataInter] (mission_Func-Mission) {$y_a^i, y_s^i, y_p^i$};&
+&
+&
+&
+&
+\node [FluidFunction,stack] (mission_Func) {$\text{trajectory()}$};&
+&
+\\
+%Row 14
+&
+&
+&
+&
+&
+\node [DataInter] (bal_Func-baln) {$y_a^i, y_s^i, y_p^i$};&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [FluidFunction,stack] (bal_Func) {$\text{stability()}$};&
+\\
+%Row 15
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\\
+};
+
+% XDSM process chains
+{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (MDAS);
+\chainin (Ini_Func) [join=by ProcessHV];
+\chainin (MDAS) [join=by ProcessHV];
+\end{pgfonlayer}
+}{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (MDAS);
+\chainin (Fuse) [join=by ProcessHV];
+\end{pgfonlayer}
+}{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (MDAS);
+\chainin (Wing) [join=by ProcessHV];
+\end{pgfonlayer}
+}{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (MDAS);
+\chainin (Tail) [join=by ProcessHV];
+\end{pgfonlayer}
+}{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (Tail);
+\chainin (baln) [join=by ProcessHV];
+\end{pgfonlayer}
+}{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (Fuse);
+\chainin (baln) [join=by ProcessHV];
+\end{pgfonlayer}
+}{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (baln);
+\chainin (drag) [join=by ProcessHV];
+\end{pgfonlayer}
+}{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (MDAS);
+\chainin (Eng) [join=by ProcessHV];
+\end{pgfonlayer}
+}{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (drag);
+\chainin (Eng) [join=by ProcessHV];
+\end{pgfonlayer}
+}{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (drag);
+\chainin (Mission) [join=by ProcessHV];
+\end{pgfonlayer}
+}{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (Eng);
+\chainin (Mission) [join=by ProcessHV];
+\end{pgfonlayer}
+}{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (Mission);
+\chainin (MDAS) [join=by ProcessHV];
+\end{pgfonlayer}
+}
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(MDAS) edge [DataLine] (MDAS-Ini_Func)
+(Ini_Func) edge [DataLine] (Ini_Func-MDAS)
+(MDAS) edge [DataLine] (MDAS-Wing)
+(Wing) edge [DataLine] (Wing-aero_Func)
+(Wing) edge [DataLine] (Wing-size_Func)
+(aero_Func) edge [DataLine] (aero_Func-Wing)
+(size_Func) edge [DataLine] (size_Func-Wing)
+(MDAS) edge [DataLine] (MDAS-Fuse)
+(Fuse) edge [DataLine] (Fuse-aero_Func)
+(Fuse) edge [DataLine] (Fuse-size_Func)
+(aero_Func) edge [DataLine] (aero_Func-Fuse)
+(size_Func) edge [DataLine] (size_Func-Fuse)
+(MDAS) edge [DataLine] (MDAS-Tail)
+(Tail) edge [DataLine] (Tail-aero_Func)
+(Tail) edge [DataLine] (Tail-size_Func)
+(aero_Func) edge [DataLine] (aero_Func-Wing)
+(size_Func) edge [DataLine] (size_Func-Wing)
+(MDAS) edge [DataLine] (MDAS-baln)
+(Fuse) edge [DataLine] (Fuse-baln)
+(Wing) edge [DataLine] (Wing-baln)
+(Tail) edge [DataLine] (Tail-baln)
+(baln) edge [DataLine] (baln-bal_Func)
+(bal_Func) edge [DataLine] (bal_Func-baln)
+(baln) edge [DataLine] (baln-drag)
+(drag) edge [DataLine] (drag-aero_Func)
+(aero_Func) edge [DataLine] (aero_Func-drag)
+(MDAS) edge [DataLine] (MDAS-Eng)
+(baln) edge [DataLine] (baln-Eng)
+(drag) edge [DataLine] (drag-Eng)
+(Eng) edge [DataLine] (Eng-eng_Func)
+(eng_Func) edge [DataLine] (eng_Func-Eng)
+(drag) edge [DataLine] (drag-Mission)
+(Eng) edge [DataLine] (Eng-Mission)
+(Mission) edge [DataLine] (Mission-mission_Func)
+(mission_Func) edge [DataLine] (mission_Func-Mission)
+(Mission) edge [DataLine] (Mission-MDAS)
+(MDAS) edge [DataLine] (left_output_MDAS)
+% Vertical edges
+(MDAS-Ini_Func) edge [DataLine] (Ini_Func)
+(Ini_Func-MDAS) edge [DataLine] (MDAS)
+(MDAS-Wing) edge [DataLine] (Wing)
+(Wing-aero_Func) edge [DataLine] (aero_Func)
+(Wing-size_Func) edge [DataLine] (size_Func)
+(aero_Func-Wing) edge [DataLine] (Wing)
+(size_Func-Wing) edge [DataLine] (Wing)
+(MDAS-Fuse) edge [DataLine] (Fuse)
+(Fuse-aero_Func) edge [DataLine] (aero_Func)
+(Fuse-size_Func) edge [DataLine] (size_Func)
+(aero_Func-Fuse) edge [DataLine] (Fuse)
+(size_Func-Fuse) edge [DataLine] (Fuse)
+(MDAS-Tail) edge [DataLine] (Tail)
+(Tail-aero_Func) edge [DataLine] (aero_Func)
+(Tail-size_Func) edge [DataLine] (size_Func)
+(aero_Func-Wing) edge [DataLine] (Wing)
+(size_Func-Wing) edge [DataLine] (Wing)
+(MDAS-baln) edge [DataLine] (baln)
+(Fuse-baln) edge [DataLine] (baln)
+(Wing-baln) edge [DataLine] (baln)
+(Tail-baln) edge [DataLine] (baln)
+(baln-bal_Func) edge [DataLine] (bal_Func)
+(bal_Func-baln) edge [DataLine] (baln)
+(baln-drag) edge [DataLine] (drag)
+(drag-aero_Func) edge [DataLine] (aero_Func)
+(aero_Func-drag) edge [DataLine] (drag)
+(MDAS-Eng) edge [DataLine] (Eng)
+(baln-Eng) edge [DataLine] (Eng)
+(drag-Eng) edge [DataLine] (Eng)
+(Eng-eng_Func) edge [DataLine] (eng_Func)
+(eng_Func-Eng) edge [DataLine] (Eng)
+(drag-Mission) edge [DataLine] (Mission)
+(Eng-Mission) edge [DataLine] (Mission)
+(Mission-mission_Func) edge [DataLine] (mission_Func)
+(mission_Func-Mission) edge [DataLine] (Mission)
+(Mission-MDAS) edge [DataLine] (MDAS)
+(MDAS) edge [DataLine] (output_MDAS);
+\end{pgfonlayer}
+
+\end{tikzpicture}
