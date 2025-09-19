@@ -6,6 +6,7 @@
 % \usepackage{amssymb}
 % \usepackage{tikz}
 
+
 % Optional packages such as sfmath set through python interface
 % \usepackage{sfmath}
 
@@ -33,47 +34,47 @@
 \node [DataInter] (Optimizer-Fluid) {$x^o, x_a$};&
 \node [DataInter] (Optimizer-Solid) {$x^o, x_s$};&
 \node [DataInter] (Optimizer-Prop) {$x^o, x_p$};&
-\node [DataInter] (Optimizer-Func) {$x$};&
+&
 \\
 %Row 2
 &
 &
 \node [MDA] (MDA) {$\text{MDA}$};&
-\node [DataInter] (MDA-Fluid) {$y_s,y_p$};&
-\node [DataInter] (MDA-Solid) {$y_p$};&
+\node [DataInter] (MDA-Fluid) {$u_s,u_p$};&
+\node [DataInter] (MDA-Solid) {$u_p$};&
 &
 &
 \\
 %Row 3
-\node [DataIO] (left_output_Fluid) {$y_a^*$};&
+\node [DataIO] (left_output_Fluid) {$u_a^*$};&
 &
-\node [DataInter] (Fluid-MDA) {$y_a$};&
+\node [DataInter] (Fluid-MDA) {$u_a$};&
 \node [FLUID] (Fluid) {$\text{Aerodynamics}$};&
-\node [DataInter] (Fluid-Solid) {$y_a$};&
-\node [DataInter] (Fluid-Prop) {$y_a$};&
-\node [DataInter] (Fluid-Func) {$y_a^*$};&
+\node [DataInter] (Fluid-Solid) {$u_a$};&
+\node [DataInter] (Fluid-Prop) {$u_a$};&
+\node [DataInter] (Fluid-Func) {$u_a^*$};&
 \\
 %Row 4
-\node [DataIO] (left_output_Solid) {$y_s^*$};&
+\node [DataIO] (left_output_Solid) {$u_s^*$};&
 &
-\node [DataInter] (Solid-MDA) {$y_s$};&
+\node [DataInter] (Solid-MDA) {$u_s$};&
 &
-\node [SOLID] (Solid) {$\text{Structure}$};&
-\node [DataInter] (Solid-Prop) {$y_s$};&
-\node [DataInter] (Solid-Func) {$y_s^*$};&
+\node [SOLID] (Solid) {$\text{Structures}$};&
+\node [DataInter] (Solid-Prop) {$u_s$};&
+\node [DataInter] (Solid-Func) {$u_s^*$};&
 \\
 %Row 5
-\node [DataIO] (left_output_Prop) {$y_p^*$};&
+\node [DataIO] (left_output_Prop) {$u_p^*$};&
 &
-\node [DataInter] (Prop-MDA) {$y_p$};&
+\node [DataInter] (Prop-MDA) {$u_p$};&
 &
 &
 \node [PROPULSION] (Prop) {$\text{Propulsion}$};&
-\node [DataInter] (Prop-Func) {$y_p^*$};&
+\node [DataInter] (Prop-Func) {$u_p^*$};&
 \\
 %Row 6
 &
-\node [DataInter] (Func-Optimizer) {$f,g, \nabla f, \nabla g$};&
+\node [DataInter] (Func-Optimizer) {$J, g, h, c, \nabla J, \nabla g, \nabla h, \nabla c$};&
 &
 &
 &
@@ -106,7 +107,6 @@
 \chainin (Optimizer);
 \chainin (MDA) [join=by ProcessHV];
 \chainin (Func) [join=by ProcessHV];
-\chainin (Optimizer) [join=by ProcessHV];
 \end{pgfonlayer}
 }
 
@@ -116,7 +116,6 @@
 (Optimizer) edge [DataLine] (Optimizer-Fluid)
 (Optimizer) edge [DataLine] (Optimizer-Solid)
 (Optimizer) edge [DataLine] (Optimizer-Prop)
-(Optimizer) edge [DataLine] (Optimizer-Func)
 (MDA) edge [DataLine] (MDA-Fluid)
 (MDA) edge [DataLine] (MDA-Solid)
 (Fluid) edge [DataLine] (Fluid-Solid)
@@ -137,7 +136,6 @@
 (Optimizer-Fluid) edge [DataLine] (Fluid)
 (Optimizer-Solid) edge [DataLine] (Solid)
 (Optimizer-Prop) edge [DataLine] (Prop)
-(Optimizer-Func) edge [DataLine] (Func)
 (MDA-Fluid) edge [DataLine] (Fluid)
 (MDA-Solid) edge [DataLine] (Solid)
 (Fluid-Solid) edge [DataLine] (Solid)

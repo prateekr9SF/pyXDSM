@@ -1,0 +1,64 @@
+
+%%% Preamble Requirements %%%
+% \usepackage{geometry}
+% \usepackage{amsfonts}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage{tikz}
+
+
+% Optional packages such as sfmath set through python interface
+% \usepackage{sfmath}
+
+% \usetikzlibrary{arrows,chains,positioning,scopes,shapes.geometric,shapes.misc,shadows}
+
+%%% End Preamble Requirements %%%
+
+\input{"/opt/homebrew/Caskroom/miniforge/base/lib/python3.10/site-packages/pyxdsm/diagram_styles"}
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+\node [Optimization] (Optimizer) {$\text{Optimizer}$};&
+&
+&
+&
+\\
+%Row 1
+&
+\node [FLUID] (Fluid) {$\text{Aerodynamics}$};&
+&
+&
+\\
+%Row 2
+&
+&
+\node [SOLID] (Solid) {$\text{Structures}$};&
+&
+\\
+%Row 3
+&
+&
+&
+\node [PROPULSION] (Prop) {$\text{Propulsion}$};&
+\\
+%Row 4
+&
+&
+&
+&
+\node [EMISSIONS] (Ems) {$\text{Env. metric}$};\\
+};
+
+% XDSM process chains
+
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+
+% Vertical edges
+;
+\end{pgfonlayer}
+
+\end{tikzpicture}

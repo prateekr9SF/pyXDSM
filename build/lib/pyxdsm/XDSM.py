@@ -22,6 +22,7 @@ RIGHT = "right"
 FLUID = "FLUID"
 SOLID = "SOLID"
 PROPULSION = "PROPULSION"
+EMISSIONS = "EMISSIONS"
 
 tikzpicture_template = r"""
 %%% Preamble Requirements %%%
